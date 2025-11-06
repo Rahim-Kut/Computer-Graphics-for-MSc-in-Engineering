@@ -1,11 +1,11 @@
 #version 450
-in vec3 vp;
+layout(location=0) in vec3 vp;
+out vec3 position;
+uniform vec2 position_offset;
 
 void main () {
-  
-	// Change this so that you don't just set `gl_Position` to `vp`, but
-	// also add an offset from a `uniform` variable:
-	gl_Position = vec4(vp, 1.0);
-
-};
+	gl_Position = vec4(vp + vec3(position_offset, 0.0) , 1.0);
+	// position = vp;  static colour
+	position = vp + vec3(position_offset, 0.0); // dynamic colour
+ };
   

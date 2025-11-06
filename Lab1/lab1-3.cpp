@@ -6,7 +6,7 @@
 #include <iostream>
 #include "readfile.hpp"
 
-
+float ox = 0.0f, oy = 0.0f;
 
 // Read the code for the shader programs from file
 std::string vertex_shader_str =	readFile("../lab1-3_vs.glsl");
@@ -65,6 +65,7 @@ void loadShaders( std::string vertex_shader_str,
 	glDeleteShader(vs);
 	glDeleteShader(fs);
 	glUseProgram (shader_program);
+
 }
 
 // Write out error in terminal in case init failed.
@@ -82,20 +83,28 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if ((key == GLFW_KEY_R) && action == GLFW_PRESS)
 	{
 		loadShaders( vertex_shader_str, fragment_shader_str );
-	} 
+	}
 	
 	//-----------------------------------------------------------------------//
 	// YOUR CODE GOES HERE
 	// Update some parameter for the vertex shader on arrow keys.
 	//-----------------------------------------------------------------------//
+
+
 	if ((key == GLFW_KEY_LEFT) && ( (action == GLFW_PRESS) || (action == GLFW_REPEAT))){
+		ox += -0.1f;
 	}
 	if ((key == GLFW_KEY_RIGHT) && ( (action == GLFW_PRESS) || (action == GLFW_REPEAT))){
+		ox += 0.1f;
 	}
 	if ((key == GLFW_KEY_UP) && ( (action == GLFW_PRESS) || (action == GLFW_REPEAT))){
+		oy += 0.1f;
+		
 	}
 	if ((key == GLFW_KEY_DOWN) && ( (action == GLFW_PRESS) || (action == GLFW_REPEAT))){
+		oy += -0.1f;
 	}
+
 }
 
 static void scroll_callback(GLFWwindow* window, double scroll_v, double scroll_h)
@@ -146,6 +155,33 @@ int main(int argc, char const *argv[])
 	//-------------------------------------------------------------------------//
 	// COPY YOUR SOLUTION FROM lab1-2.cpp HERE.
 	// Create geometry and VBO and VAO.
+	float points[] = {
+		-0.6f, -0.6f, 0.0f,  // Vertex 1
+		 0.6f, -0.6f, 0.0f,  // Vertex 2
+		 0.0f,  0.6f, 0.0f   // Vertex 3
+	};
+	// 2-3. Create VAO and VBO
+	GLuint vao = 0;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	GLuint vbo = 0;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	// 4-6. Copy vertex data to VBO, configure the VAO
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(
+		0,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+	);
 	//-------------------------------------------------------------------------//
 
 	while (!glfwWindowShouldClose (window)) 
@@ -158,11 +194,18 @@ int main(int argc, char const *argv[])
 		//-----------------------------------------------------------------------//
 		// YOUR CODE GOES HERE
 		// Update uniform variables in your shader_program
+		GLint g_uOffset = glGetUniformLocation(shader_program, "position_offset");
+		glUniform2f(g_uOffset, ox, oy);
+
 		//-----------------------------------------------------------------------//
 
 		//-----------------------------------------------------------------------//
 		// COPY YOUR SOLUTION FROM lab1-2.cpp HERE.
 		// Issue an appropriate glDraw*() command.
+
+		glBindVertexArray(vao);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 		//-----------------------------------------------------------------------//
 
 		glfwSwapBuffers (window);
