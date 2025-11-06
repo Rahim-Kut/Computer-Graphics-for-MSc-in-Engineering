@@ -19,6 +19,3 @@ build.ninja
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# --- We’re using VS Code, not the provided VS solutions ---
-visual_studio/
