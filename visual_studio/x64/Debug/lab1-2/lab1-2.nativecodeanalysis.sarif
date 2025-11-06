@@ -1,0 +1,59 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "MSVC Code Analysis",
+          "version": "14.44.35219.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///c:/users/hilof/computer graphics/computer-graphics-for-msc-in-engineering/lab1/lab1-2.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "017c7936f976a307fadd767dc46c81198f5226a17cc15c2eec0fa9ba3b711d0c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/hilof/computer graphics/computer-graphics-for-msc-in-engineering/common/windows_users/glew/glew-2.0.0/include/gl/glew.h"
+          },
+          "hashes": {
+            "sha-256": "16dda61fed776fcbc656955d408305d8f4d600acf932ffeb00a53e053699eccb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/hilof/computer graphics/computer-graphics-for-msc-in-engineering/common/windows_users/glfw/64bit/glfw-3.2.1.bin.win64/include/glfw/glfw3.h"
+          },
+          "hashes": {
+            "sha-256": "58cb6576c30b9a4d67f4041ab713da850eabafafb2c14d23e1c5a500654788dd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///c:/users/hilof/computer graphics/computer-graphics-for-msc-in-engineering/common/readfile.hpp"
+          },
+          "hashes": {
+            "sha-256": "533655bee46518468cd7d18b4ec86aa0d9c4d63ecd63547b21f6b1c3879f2504"
+          }
+        }
+      ]
+    }
+  ]
+}

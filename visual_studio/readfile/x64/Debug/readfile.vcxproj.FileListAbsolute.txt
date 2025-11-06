@@ -1,0 +1,2 @@
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\common\build\lib\readfile.lib.lastcodeanalysissucceeded
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\visual_studio\readfile\x64\Debug\NativeCodeAnalysis.read.1.tlog
