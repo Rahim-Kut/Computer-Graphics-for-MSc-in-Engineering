@@ -94,8 +94,33 @@ int main(int argc, char const *argv[])
 	//-------------------------------------------------------------------------//
 	// YOUR CODE GOES HERE.
 	// 1. Create geometry
+	float points[] = {
+		-0.6f, -0.6f, 0.0f,  // Vertex 1
+		 0.6f, -0.6f, 0.0f,  // Vertex 2
+		 0.0f,  0.6f, 0.0f   // Vertex 3
+	};
 	// 2-3. Create VAO and VBO
+	GLuint vao = 0;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	GLuint vbo = 0;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
 	// 4-6. Copy vertex data to VBO, configure the VAO
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(
+		0,
+		3,
+		GL_FLOAT,
+		GL_FALSE,         
+		0,                  
+		(void*)0            
+	);
 	//-------------------------------------------------------------------------//
 
 	
@@ -110,6 +135,10 @@ int main(int argc, char const *argv[])
 		//-----------------------------------------------------------------------//
 		// YOUR CODE GOES HERE.
 		// 7. Bind the VAO and issue an appropriate glDraw*() command.
+
+		glBindVertexArray(vao);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 		//-----------------------------------------------------------------------//
 
 		//Refresh the displayed image.
