@@ -15,6 +15,8 @@ GLuint shader_program;
 // You can store the rotation angles here, for example
 float g_rotation[2];
 
+float x_rotate_angle = 0.0f;
+float y_rotate_angle = 0.0f;
 
 // Multiply two 4x4 matrices A * B = C
 void MUL_4x4 (GLfloat (*C)[4], const GLfloat (*A)[4], const GLfloat (*B)[4])
@@ -102,10 +104,18 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	// Update rotation angle here, for example
 	//-------------------------------------------------------------------------//
 
-	//  if ((key == GLFW_KEY_RIGHT) && ( (action == GLFW_PRESS) || action==GLFW_REPEAT) )   
-	//  if ((key == GLFW_KEY_LEFT) && ( (action == GLFW_PRESS) || action==GLFW_REPEAT) )     
-	//  if ((key == GLFW_KEY_UP) && ( (action == GLFW_PRESS) || action==GLFW_REPEAT) )   
-	//  if ((key == GLFW_KEY_DOWN) && ( (action == GLFW_PRESS) || action==GLFW_REPEAT) ) 
+	if ((key == GLFW_KEY_RIGHT) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		y_rotate_angle += 5.0f;
+	}
+	if ((key == GLFW_KEY_LEFT) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		y_rotate_angle -= 5.0f;
+	}
+	if ((key == GLFW_KEY_UP) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		x_rotate_angle += 5.0f;
+	}
+	if ((key == GLFW_KEY_DOWN) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		x_rotate_angle -= 5.0f;
+	}
 	
 }
 
@@ -160,6 +170,63 @@ int main(int argc, char const *argv[])
 	//-------------------------------------------------------------------------//
 	// COPY FROM lab1-4
 	// Geometry, VBO, EBO, VAO
+	// 3d cube 
+	float points[] = {
+		-0.5, -0.5, -0.5,
+		 0.5, -0.5, -0.5,
+		 0.5,  0.5, -0.5,
+		-0.5,  0.5, -0.5,
+		-0.5, -0.5,  0.5,
+		 0.5, -0.5,  0.5,
+		 0.5,  0.5,  0.5,
+		-0.5,  0.5,  0.5
+	};
+
+	// 12 triangular faces (vertexes that make up one triangle are listed in counter-clockwise order)
+	unsigned short faces[] = {
+		0, 3, 2,   
+		0, 2, 1,   
+		4, 6, 7,   
+		4, 5, 6,   
+		0, 7, 3,   
+		0, 4, 7,   
+		1, 6, 5,   
+		1, 2, 6,   
+		0, 5, 4,   
+		0, 1, 5,   
+		3, 6, 2,   
+		3, 7, 6    
+	};
+
+	GLuint vao = 0;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	GLuint vbo = 0;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(
+		0,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+	);
+
+
+	GLuint ebo = 0;
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);
+
+
+	 
+	
 	//-------------------------------------------------------------------------//
    
 
@@ -177,8 +244,18 @@ int main(int argc, char const *argv[])
 		// YOUR CODE GOES HERE
 		// Define the projection matrix, rotation matrices, model matrix, etc.
 
-		// GLfloat rotate_y[4][4];
-		// GLfloat rotate_x[4][4]; 
+		GLfloat rotate_y[4][4] = {
+			cos(y_rotate_angle), 0, -sin(y_rotate_angle), 0,
+			0, 1, 0, 0,
+			sin(y_rotate_angle), 0, cos(y_rotate_angle), 0,
+			0, 0, 0, 1
+		};
+		GLfloat rotate_x[4][4] = {
+			1, 0, 0, 0,
+			0, cos(x_rotate_angle), sin(x_rotate_angle), 0,
+			0, -sin(x_rotate_angle), cos(x_rotate_angle), 0,
+			0, 0, 0, 1
+		};
     
 		// GLfloat modelMatrix[4][4];
 		// MUL_4x4(modelMatrix, rotate_x, rotate_y);

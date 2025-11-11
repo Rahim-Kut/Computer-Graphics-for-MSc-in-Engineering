@@ -131,6 +131,62 @@ int main(int argc, char const *argv[])
 	// YOUR CODE GOES HERE.
 	// Create geometry and VBO and VAO, and also an EBO.
 	// (The geometry will be new, so you cannot only copy your previous code.)
+	// 3d cube 
+	float points[] = {
+		-0.5, -0.5, -0.5,
+		 0.5, -0.5, -0.5,
+		 0.5,  0.5, -0.5,
+		-0.5,  0.5, -0.5,
+		-0.5, -0.5,  0.5,
+		 0.5, -0.5,  0.5,
+		 0.5,  0.5,  0.5,
+		-0.5,  0.5,  0.5
+	};
+
+	// 12 triangular faces (vertexes that make up one triangle are listed in counter-clockwise order)
+	unsigned short faces[] = {
+		0, 3, 2,   
+		0, 2, 1,   
+		4, 6, 7,   
+		4, 5, 6,   
+		0, 7, 3,   
+		0, 4, 7,   
+		1, 6, 5,   
+		1, 2, 6,   
+		0, 5, 4,   
+		0, 1, 5,   
+		3, 6, 2,   
+		3, 7, 6    
+	};
+
+	GLuint vao = 0;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	GLuint vbo = 0;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(
+		0,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+	);
+
+
+	GLuint ebo = 0;
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);
+
+
+	
 	//-------------------------------------------------------------------------//
 
 	while (!glfwWindowShouldClose (window)) 
@@ -143,8 +199,10 @@ int main(int argc, char const *argv[])
 		//-----------------------------------------------------------------------//
 		// YOUR CODE GOES HERE
 		// Issue an appropriate glDraw*() command.
-		//-----------------------------------------------------------------------//
+		glBindVertexArray(vao);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
 
+		//-----------------------------------------------------------------------//
 		glfwSwapBuffers (window);
 	}
 
