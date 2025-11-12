@@ -12,9 +12,6 @@ std::string vertex_shader_str =	readFile("../lab1-5_vs.glsl");
 std::string fragment_shader_str =	readFile("../lab1-5_fs.glsl");
 GLuint shader_program;
 
-// You can store the rotation angles here, for example
-float g_rotation[2];
-
 float x_rotate_angle = 0.0f;
 float y_rotate_angle = 0.0f;
 
@@ -24,6 +21,16 @@ void MUL_4x4 (GLfloat (*C)[4], const GLfloat (*A)[4], const GLfloat (*B)[4])
 	//-------------------------------------------------------------------------//
 	// YOUR CODE GOES HERE
 	// Compute C = A * B
+	
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			C[i][j] = 0.0f;
+			for (int k = 0; k < 4; k++) {
+				C[i][j] += A[i][k] * B[k][j];
+			}
+		}
+	}
+
 	//-------------------------------------------------------------------------//
 }
 
@@ -105,16 +112,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	//-------------------------------------------------------------------------//
 
 	if ((key == GLFW_KEY_RIGHT) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
-		y_rotate_angle += 5.0f;
+		y_rotate_angle += 0.1f;
 	}
 	if ((key == GLFW_KEY_LEFT) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
-		y_rotate_angle -= 5.0f;
+		y_rotate_angle -= 0.1f;
 	}
 	if ((key == GLFW_KEY_UP) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
-		x_rotate_angle += 5.0f;
+		x_rotate_angle += 0.1f;
 	}
 	if ((key == GLFW_KEY_DOWN) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
-		x_rotate_angle -= 5.0f;
+		x_rotate_angle -= 0.1f;
 	}
 	
 }
@@ -257,27 +264,49 @@ int main(int argc, char const *argv[])
 			0, 0, 0, 1
 		};
     
-		// GLfloat modelMatrix[4][4];
-		// MUL_4x4(modelMatrix, rotate_x, rotate_y);
-    
-		// GLfloat viewMatrix[4][4];
-    
-		// GLfloat modelViewMatrix[4][4];
-		// MUL_4x4(modelViewMatrix, inverseViewMatrix, modelMatrix);
+		GLfloat modelMatrix[4][4];
 
-		// GLfloat projectionMatrix[4][4];
+		MUL_4x4(modelMatrix, rotate_x, rotate_y);
+    
+		GLfloat viewMatrix[4][4] = {
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 2,
+			0, 0, 0, 1
+		};
+
+		GLfloat inverseViewMatrix[4][4] = {
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, -2,
+			0, 0, 0, 1
+		};
+    
+		GLfloat modelViewMatrix[4][4];
+		MUL_4x4(modelViewMatrix, inverseViewMatrix, modelMatrix);
+
+		//near = 1.0 and far = 100.0
+		GLfloat projectionMatrix[4][4] = {
+			1.0f, 0, 0, 0,
+			0, 1.0f, 0, 0,
+			0, 0, -101.0f / 99.0f, -200.0f / 99.0f,
+			0, 0, -1.0f, 0
+		};
 		
-		// GLfloat modelViewProjectionMatrix[4][4];
-		// MUL_4x4(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+		GLfloat modelViewProjectionMatrix[4][4];
+		MUL_4x4(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
 		//-----------------------------------------------------------------------//
     
 		//-----------------------------------------------------------------------//
 		// YOUR CODE GOES HERE
 		// Use glUniformMatrix4fv to send your matrix or matrices to the shader
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "modelViewProjectionMatrix"), 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
 		//-----------------------------------------------------------------------//
     
 		//-----------------------------------------------------------------------//
 		// Call glDrawElements as before
+		glBindVertexArray(vao);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
 		//-----------------------------------------------------------------------//
 
 		glfwSwapBuffers (window);
