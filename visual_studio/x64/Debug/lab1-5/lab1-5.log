@@ -2,4 +2,7 @@
 C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-5.cpp(170,25): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
 C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-5.cpp(170,20): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
 C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-5.cpp(170,15): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\build\vc120.pdb'; linking object as if no debug info
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   lab1-5.vcxproj -> C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\build\lab1-5.exe

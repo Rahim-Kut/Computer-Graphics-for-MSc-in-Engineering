@@ -21,6 +21,9 @@ std::string vertex_shader_str =	readFile("../lab1-6_vs.glsl");
 std::string fragment_shader_str =	readFile("../lab1-6_fs.glsl");
 GLuint shader_program;
 
+float x_rotate_angle = 0.0f;
+float y_rotate_angle = 0.0f;
+
 
 // Helper function to forward shader compilation errors to terminal.
 void checkShaderCompileError(GLint shaderID)
@@ -87,12 +90,25 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	//-------------------------------------------------------------------------//
 	// COPY YOUR CODE FROM BEFORE HERE
 	// Update rotation angle here, for example
+	if ((key == GLFW_KEY_RIGHT) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		y_rotate_angle += 0.1f;
+	}
+	if ((key == GLFW_KEY_LEFT) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		y_rotate_angle -= 0.1f;
+	}
+	if ((key == GLFW_KEY_UP) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		x_rotate_angle += 0.1f;
+	}
+	if ((key == GLFW_KEY_DOWN) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		x_rotate_angle -= 0.1f;
+	}
+		 
 	//-------------------------------------------------------------------------//
 }
 
 static void scroll_callback(GLFWwindow* window, double scroll_v, double scroll_h)
 {
-}
+};
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -129,6 +145,7 @@ int main(int argc, char const *argv[])
 	glewInit ();
 
 	loadShaders( vertex_shader_str, fragment_shader_str );
+	GLint uMVP = glGetUniformLocation(shader_program, "uMVP");
 	
 	glEnable (GL_DEPTH_TEST); // enable depth-testing
 	glDepthFunc (GL_LESS); // depth-testing interprets a smaller value as "closer"
@@ -136,6 +153,58 @@ int main(int argc, char const *argv[])
 	//-------------------------------------------------------------------------//
 	// COPY FROM lab1-5
 	// Geometry, VBO, EBO, VAO
+	float points[] = {
+		-0.5, -0.5, -0.5,
+		 0.5, -0.5, -0.5,
+		 0.5,  0.5, -0.5,
+		-0.5,  0.5, -0.5,
+		-0.5, -0.5,  0.5,
+		 0.5, -0.5,  0.5,
+		 0.5,  0.5,  0.5,
+		-0.5,  0.5,  0.5
+	};
+
+	// 12 triangular faces (vertexes that make up one triangle are listed in counter-clockwise order)
+	unsigned short faces[] = {
+		0, 3, 2,
+		0, 2, 1,
+		4, 6, 7,
+		4, 5, 6,
+		0, 7, 3,
+		0, 4, 7,
+		1, 6, 5,
+		1, 2, 6,
+		0, 5, 4,
+		0, 1, 5,
+		3, 6, 2,
+		3, 7, 6
+	};
+
+	GLuint vao = 0;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	GLuint vbo = 0;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(
+		0,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+	);
+
+
+	GLuint ebo = 0;
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);	 
 	//-------------------------------------------------------------------------//
   
 
@@ -153,19 +222,25 @@ int main(int argc, char const *argv[])
 		//
 		// Replace your hand-crafted matrices from lab1-5.cpp with ones
 		// created by glm.
-		//
-		// Use glm::perspective to create a projection matrix
-		//
-		// Use glm::translate and glm::rotate to create the
-		// model and view matrices.
-		//
-		// Multiply your matrices in the correct order to get a
-		// modelViewProjection matrix and upload it to the appropriate
-		// uniform variable in vertex shader.
+		glm::mat4 Projection = glm::perspective(glm::radians(45.0f),float(w_width)/w_height, 1.0f, 100.0f);
+		
+		glm::vec3 translate(0.0f, 0.0f, -2.0f);
+		glm::mat4 View(1.0f);
+		View = glm::translate(View, translate);
+
+		glm::vec3 rotate(x_rotate_angle, y_rotate_angle, 0.0f);
+		glm::mat4 Model(1.0f);
+		Model = glm::rotate(Model, rotate.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		Model = glm::rotate(Model, rotate.y, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		glm::mat4 MVP = Projection * View * Model;
+		glUniformMatrix4fv(uMVP, 1, GL_FALSE, glm::value_ptr(MVP));
 		// -----------------------------------------------------------------------//
 	 
 		//-----------------------------------------------------------------------//
 		// Call glDrawElements as before
+		glBindVertexArray(vao);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
 		//-----------------------------------------------------------------------//
 
 		glfwSwapBuffers (window);

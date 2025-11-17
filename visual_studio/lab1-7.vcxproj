@@ -22,6 +22,8 @@
     <ClCompile Include="..\Lab1\lab1-7.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Lab1\lab1-6_fs.glsl" />
+    <None Include="..\Lab1\lab1-6_vs.glsl" />
     <None Include="..\Lab1\lab1-7_fs.glsl" />
     <None Include="..\Lab1\lab1-7_vs.glsl" />
   </ItemGroup>

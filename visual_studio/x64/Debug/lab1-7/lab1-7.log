@@ -1,0 +1,6 @@
+﻿  lab1-7.cpp
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-7.cpp(111,13): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-7.cpp(114,13): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-7.cpp(117,15): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-7.cpp(120,15): warning C4305: '+=': truncation from 'double' to 'float'
+  lab1-7.vcxproj -> C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\build\lab1-7.exe
