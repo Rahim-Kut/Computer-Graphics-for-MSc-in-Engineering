@@ -24,8 +24,6 @@
   <ItemGroup>
     <None Include="..\Lab1\lab1-6_fs.glsl" />
     <None Include="..\Lab1\lab1-6_vs.glsl" />
-    <None Include="..\Lab1\lab1-7_fs.glsl" />
-    <None Include="..\Lab1\lab1-7_vs.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{28C57E3F-CFBD-4BAC-AAAE-126FBB17191A}</ProjectGuid>

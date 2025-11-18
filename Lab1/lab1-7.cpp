@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include <GLFW/glfw3.h>
-#include <cstdlib>  
 #include <iostream>
 #include "readfile.hpp"
 
@@ -21,8 +20,11 @@ std::string vertex_shader_str = readFile("../lab1-6_vs.glsl");
 std::string fragment_shader_str = readFile("../lab1-6_fs.glsl");
 GLuint shader_program;
 
-float x_rotate_angle = 0.0f;
-float y_rotate_angle = 0.0f;
+float x_rotate_angle1 = 0.0f;
+float y_rotate_angle1 = 0.0f;
+
+float x_rotate_angle2 = 0.0f;
+float y_rotate_angle2 = 0.0f;
 
 glm::vec3 camPos(0.0f, 0.0f, 2.0f);
 float camYaw = 0.0f; // Y axis
@@ -90,21 +92,34 @@ static void error_callback(int error, const char* description)
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	//-------------------------------------------------------------------------//
-	// COPY YOUR CODE FROM BEFORE HERE
-	// Update rotation angle here, for example
+	//rotate cube 1 (arrow keys)
 	if ((key == GLFW_KEY_RIGHT) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
-		y_rotate_angle += 0.1f;
+		y_rotate_angle1 += 0.1f;
 	}
 	if ((key == GLFW_KEY_LEFT) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
-		y_rotate_angle -= 0.1f;
+		y_rotate_angle1 -= 0.1f;
 	}
 	if ((key == GLFW_KEY_UP) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
-		x_rotate_angle += 0.1f;
+		x_rotate_angle1 += 0.1f;
 	}
 	if ((key == GLFW_KEY_DOWN) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
-		x_rotate_angle -= 0.1f;
+		x_rotate_angle1 -= 0.1f;
 	}
+
+	//rotate cube 2 (gvbn)
+	if ((key == GLFW_KEY_G) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		y_rotate_angle2 += 0.1f;
+	}
+	if ((key == GLFW_KEY_B) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		y_rotate_angle2 -= 0.1f;
+	}
+	if ((key == GLFW_KEY_V) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		x_rotate_angle2 += 0.1f;
+	}
+	if ((key == GLFW_KEY_N) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
+		x_rotate_angle2 -= 0.1f;
+	}
+
 
 	// Camera rotation (I/K pitch, J/L yaw)
 	if ((key == GLFW_KEY_J) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
@@ -204,6 +219,18 @@ int main(int argc, char const* argv[])
 		-0.5,  0.5,  0.5
 	};
 
+	// new cube at different position (translated +1.5 on X)
+	float points2[] = {
+		 1.0, -0.5, -0.5,
+		 2.0, -0.5, -0.5,
+		 2.0,  0.5, -0.5,
+		 1.0,  0.5, -0.5,
+		 1.0, -0.5,  0.5,
+		 2.0, -0.5,  0.5,
+		 2.0,  0.5,  0.5,
+		 1.0,  0.5,  0.5
+	};
+
 	// 12 triangular faces (vertexes that make up one triangle are listed in counter-clockwise order)
 	unsigned short faces[] = {
 		0, 3, 2,
@@ -220,16 +247,22 @@ int main(int argc, char const* argv[])
 		3, 7, 6
 	};
 
+	GLuint ebo = 0;
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);
+
 	GLuint vao = 0;
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
 	GLuint vbo = 0;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-
 	glVertexAttribPointer(
 		0,
 		3,
@@ -239,12 +272,27 @@ int main(int argc, char const* argv[])
 		(void*)0
 	);
 
-
-	GLuint ebo = 0;
-	glGenBuffers(1, &ebo);
+	// VAO 2
+	GLuint vao2 = 0;
+	glGenVertexArrays(1, &vao2);
+	glBindVertexArray(vao2);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);
+
+	GLuint vbo2 = 0;
+	glGenBuffers(1, &vbo2);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points2), points2, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(
+		0,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		(void*)0
+	);
+
 	//-------------------------------------------------------------------------//
 
 
@@ -263,26 +311,34 @@ int main(int argc, char const* argv[])
 
 		// Build View as inverse of camera transform
 
-
 		glm::mat4 View(1.0f);
 		View = glm::rotate(View, -camPitch, glm::vec3(1.0f, 0.0f, 0.0f));
 		View = glm::rotate(View, -camYaw, glm::vec3(0.0f, 1.0f, 0.0f));
 		View = glm::translate(View, -camPos);
 
-		glm::vec3 rotate(x_rotate_angle, y_rotate_angle, 0.0f);
-		glm::mat4 Model(1.0f);
-		Model = glm::rotate(Model, rotate.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		Model = glm::rotate(Model, rotate.y, glm::vec3(0.0f, 1.0f, 0.0f));
 
-		glm::mat4 MVP = Projection * View * Model;
-		glUniformMatrix4fv(uMVP, 1, GL_FALSE, glm::value_ptr(MVP));
-		// -----------------------------------------------------------------------//
+		//cube 1
+		glm::vec3 rotate1(x_rotate_angle1, y_rotate_angle1, 0.0f);
+		glm::mat4 Model1(1.0f);
+		Model1 = glm::rotate(Model1, rotate1.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		Model1 = glm::rotate(Model1, rotate1.y, glm::vec3(0.0f, 1.0f, 0.0f));
 
-		//-----------------------------------------------------------------------//
-		// Call glDrawElements as before
+		glm::mat4 MVP1 = Projection * View * Model1;
+		glUniformMatrix4fv(uMVP, 1, GL_FALSE, glm::value_ptr(MVP1));
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
-		//-----------------------------------------------------------------------//
+
+		//cube 2
+		glm::vec3 rotate2(x_rotate_angle2, y_rotate_angle2, 0.0f);
+		glm::mat4 Model2(1.0f);
+		Model2 = glm::rotate(Model2, rotate2.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		Model2 = glm::rotate(Model2, rotate2.y, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		glm::mat4 MVP2 = Projection * View * Model2;
+		glUniformMatrix4fv(uMVP, 1, GL_FALSE, glm::value_ptr(MVP2));
+
+		glBindVertexArray(vao2);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
 
 		glfwSwapBuffers(window);
 	}

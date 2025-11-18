@@ -6,6 +6,6 @@ out vec4 position;
 void main () {
 
 	gl_Position = uMVP * vp;
-	position = gl_Position;
+    position = gl_Position;
 
 }
