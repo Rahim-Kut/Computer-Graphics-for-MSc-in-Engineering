@@ -14,7 +14,7 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> //glm::value_ptr
-
+#include <glm/gtx/string_cast.hpp>
 
 // Read the code for the shader programs from file
 std::string vertex_shader_str =	readFile("../lab1-6_vs.glsl");
@@ -235,6 +235,10 @@ int main(int argc, char const *argv[])
 
 		glm::mat4 MVP = Projection * View * Model;
 		glUniformMatrix4fv(uMVP, 1, GL_FALSE, glm::value_ptr(MVP));
+
+		std::cout << glm::to_string(Model) << std::endl;
+		std::cout << glm::to_string(View) << std::endl;
+		std::cout << glm::to_string(Projection) << std::endl;
 		// -----------------------------------------------------------------------//
 	 
 		//-----------------------------------------------------------------------//

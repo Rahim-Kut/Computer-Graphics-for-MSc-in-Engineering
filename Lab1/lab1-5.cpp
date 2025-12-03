@@ -285,9 +285,11 @@ int main(int argc, char const *argv[])
 		GLfloat modelViewMatrix[4][4];
 		MUL_4x4(modelViewMatrix, inverseViewMatrix, modelMatrix);
 
+		float aspect = (float)w_width / (float)w_height;
+
 		//near = 1.0 and far = 100.0
 		GLfloat projectionMatrix[4][4] = {
-			1.0f, 0, 0, 0,
+			1.0f/aspect, 0, 0, 0,
 			0, 1.0f, 0, 0,
 			0, 0, -101.0f / 99.0f, -200.0f / 99.0f,
 			0, 0, -1.0f, 0

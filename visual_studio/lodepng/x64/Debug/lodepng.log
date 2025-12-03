@@ -1,1 +1,8 @@
-﻿  lodepng.vcxproj -> C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\common\build\lib\lodepng.lib
+﻿  lodepng.cpp
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\common\lodepng.cpp(762,10): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\common\lodepng.cpp(1422,25): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\common\lodepng.cpp(1426,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\common\lodepng.cpp(1498,40): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\common\lodepng.cpp(3441,25): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\common\lodepng.cpp(3455,53): warning C4267: 'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
+  lodepng.vcxproj -> C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\common\build\lib\lodepng.lib

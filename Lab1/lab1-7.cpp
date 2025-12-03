@@ -106,7 +106,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		x_rotate_angle1 -= 0.1f;
 	}
 
-	//rotate cube 2 (gvbn)
+	// rotate cube 2 (gvbn)
 	if ((key == GLFW_KEY_G) && ((action == GLFW_PRESS) || action == GLFW_REPEAT)) {
 		y_rotate_angle2 += 0.1f;
 	}
