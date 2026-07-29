@@ -10,12 +10,25 @@ build.ninja
 .ninja_log
 
 # --- Compiled stuff ---
-*.o *.obj *.a *.lib *.dll *.so *.dylib *.pdb *.ilk *.exe *.app
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.pdb
+*.ilk
+*.exe
+*.app
 
 # --- IDE/OS fluff ---
 .vscode/
 .vs/
 .idea/
+*.vcxproj.user
+visual_studio/x64/
+visual_studio/**/x64/
 .DS_Store
 Thumbs.db
 desktop.ini
