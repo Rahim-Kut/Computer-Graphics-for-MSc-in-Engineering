@@ -1,5 +1,0 @@
-﻿  lab1-1.cpp
-C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-1.cpp(91,25): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-1.cpp(91,20): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\lab1-1.cpp(91,15): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
-  lab1-1.vcxproj -> C:\Users\hilof\Computer Graphics\Computer-Graphics-for-MSc-in-Engineering\Lab1\build\lab1-1.exe
