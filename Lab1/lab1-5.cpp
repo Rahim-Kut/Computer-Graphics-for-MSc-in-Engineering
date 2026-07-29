@@ -302,7 +302,7 @@ int main(int argc, char const *argv[])
 		//-----------------------------------------------------------------------//
 		// YOUR CODE GOES HERE
 		// Use glUniformMatrix4fv to send your matrix or matrices to the shader
-		glUniformMatrix4fv(glGetUniformLocation(shader_program, "modelViewProjectionMatrix"), 1, GL_FALSE, &modelViewProjectionMatrix[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "modelViewProjectionMatrix"), 1, GL_TRUE, &modelViewProjectionMatrix[0][0]);
 		//-----------------------------------------------------------------------//
     
 		//-----------------------------------------------------------------------//

@@ -236,9 +236,9 @@ int main(int argc, char const *argv[])
 		glm::mat4 MVP = Projection * View * Model;
 		glUniformMatrix4fv(uMVP, 1, GL_FALSE, glm::value_ptr(MVP));
 
-		std::cout << glm::to_string(Model) << std::endl;
-		std::cout << glm::to_string(View) << std::endl;
-		std::cout << glm::to_string(Projection) << std::endl;
+		//std::cout << glm::to_string(Model) << std::endl;
+		//std::cout << glm::to_string(View) << std::endl;
+		//std::cout << glm::to_string(Projection) << std::endl;
 		// -----------------------------------------------------------------------//
 	 
 		//-----------------------------------------------------------------------//
