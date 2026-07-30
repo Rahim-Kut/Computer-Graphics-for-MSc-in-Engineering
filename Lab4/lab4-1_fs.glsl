@@ -225,9 +225,13 @@ Intersection intersect( Ray ray)
       t = d; 
       id = i;
 
-      ///\todo YOUR CODE GOES HERE
       // Populate I with all the relevant data.  `id` is the closest
       // sphere that was hit, and `t` is the distance to it.
+
+	  // Store the information for the closest sphere hit
+	  I.point = ray.origin + t * ray.dir;
+	  I.normal = normalize(I.point - scene.spheres[id].center); // normal = hit point - sphere centre
+	  I.material = scene.spheres[id].material;
 
     }
   }
@@ -239,8 +243,10 @@ Intersection intersect( Ray ray)
     {
       t=d;
 
-      ///\todo YOUR CODE GOES HERE
-      // Populate I with all the relevant data.
+      // Store information for the ground-plane hit
+	  I.point = ray.origin + t * ray.dir;
+	  I.normal = normalize(scene.ground_plane[0].normal);
+	  I.material = scene.ground_plane[0].material;
       
       // Adding a procedural checkerboard texture:
       I.material.color_diffuse = (mod(floor(I.point.x) + floor(I.point.z),2.0) == 0.0) ?
