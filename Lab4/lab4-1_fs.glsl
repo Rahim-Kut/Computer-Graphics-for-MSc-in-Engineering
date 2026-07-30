@@ -263,8 +263,8 @@ void main() {
 
 	Ray ray;
 	ray.origin = i_position;
-	///\todo YOUR CODE GOES HERE: Compute the correct ray direction using gl_fragCoord and the camera vectors above.
-	ray.dir = vec3(0,-1,0);
+	// Compute the correct ray direction using gl_fragCoord and the camera vectors above.
+	ray.dir = normalize(f_dist * cz + uv.x * cx + uv.y * cy); // ray direction = forward + horizontal offset + vertical offset
 	
 	vec3 color = raycast(ray);
 	
@@ -273,9 +273,6 @@ void main() {
 
 	//gamma correction
 	o_fragment_color = vec4( pow ( clamp(color.xyz/num_samples, 0., 1.), vec3(1./2.2)), 1.); 
-
-	///\todo REMOVE THIS LINE after you have the triangles set up
-	o_fragment_color = vec4(1,0.9,0.8,1); 
 }
 
 
