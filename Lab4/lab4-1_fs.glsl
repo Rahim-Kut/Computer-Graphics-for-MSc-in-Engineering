@@ -12,6 +12,7 @@ uniform vec3 i_up;
 uniform vec3 i_right;
 uniform vec3 i_dir;
 uniform float i_focal_dist;
+uniform vec3 i_light_position;
 
 #define NUM_SPHERES 5
 #define MAX_SAMPLES 1
@@ -280,12 +281,22 @@ vec3 raycast(Ray ray)
 
   Intersection isec = intersect(ray);
 
-  ///\todo YOUR CODE GOES HERE: Compute a more interesting colour instead of
+  // Compute a more interesting colour instead of
   // the one below!  Compute the shading, using the
   // position/normal/material data stored in isec; and
   // i_light_position, which is a point light source at the sun.
-  color = isec.material.color_diffuse + isec.material.color_emission;
   
+
+  // Direction from the intersection point towards the light
+  vec3 light_direction = normalize(i_light_position - isec.point);
+
+  float cosine = max(0.0, dot(isec.normal, light_direction)); // Lambert's cosign law
+
+  vec3 lambertian_brdf = isec.material.color_diffuse / 3.14159265;
+
+  // Direct diffuse lighting plus the object's own emitted light
+  color = lambertian_brdf * cosine + isec.material.color_emission;
+
   return color;
 }
 
