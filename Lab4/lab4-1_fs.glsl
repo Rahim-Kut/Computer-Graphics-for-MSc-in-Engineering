@@ -159,16 +159,55 @@ vec3 simple_sky(vec3 direction)
 
 float intersect(Ray ray, Sphere s) 
 {
-  ///\todo YOUR CODE GOES HERE.
   // Return closest distance t for a ray/sphere intersection.
-  return 0;
+
+  // Vector from the sphere to the ray origin
+  vec3 oc = ray.origin - s.center;
+
+  // Quadratic equation: a × t² + b × t + c = 0
+
+  // Coefficients of the quadratic equation
+  float a = dot(ray.dir, ray.dir);
+  float b = 2.0 * dot(oc, ray.dir);
+  float c = dot(oc, oc) - s.radius * s.radius;
+
+  float discriminant = b * b - 4.0 * a * c; 
+
+  // Negative discriminant means that the ray misses the sphere
+  if (discriminant < 0.0)
+	return -1.0;
+  
+  float sqrt_discriminant = sqrt(discriminant);
+  float t_near = (-b - sqrt_discriminant) / (2.0 * a);
+  float t_far = (-b + sqrt_discriminant) / (2.0 * a);
+
+  // Return the closest intersection in front of the camera
+  if (t_near > 0.0)
+	return t_near;
+  if (t_far > 0.0)
+	return t_far;
+
+  return -1.0;
 }
 
 float intersect(Ray ray, Plane p) 
 {
-  ///\todo YOUR CODE GOES HERE.
   // Return closest distance t for a ray/plane intersection.
-  return 0;
+
+  float denominator = dot(p.normal, ray.dir); // measuers how directly rhe ray approaches the plane
+
+  // A value close to 0 means the ray is paralell to the plane
+  if (abs(denominator) < 0.000001)
+	return -1.0;
+  
+  float t = -(dot(p.normal, ray.origin) + p.offset) / denominator;
+  
+  //ignore intersections behind the camera
+  if (t <= 0.0)
+	return -1.0;
+
+  return t;
+
 }
 
 
