@@ -209,7 +209,15 @@ int main(int argc, char const *argv[])
 
   //this will be the image plane: two triangles, spanning the entire screen.
   float points[] = {
-    //\todo YOUR CODE HERE
+      -1.0f, -1.0f, 0.0f, // triangle 1: bottom left
+       1.0f, -1.0f, 0.0f, // triangle 1: bottom right
+       1.0f,  1.0f, 0.0f, // triangle 1: top right
+
+      -1.0f, -1.0f, 0.0f, // triangle 2: bottom left
+       1.0f,  1.0f, 0.0f, // triangle 2: top right
+      -1.0f,  1.0f, 0.0f  // triangle 2: top left
+
+
   };
 
   GLuint vbo = 0;
