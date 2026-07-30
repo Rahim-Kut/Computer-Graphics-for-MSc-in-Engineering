@@ -32,3 +32,4 @@ visual_studio/**/x64/
 .DS_Store
 Thumbs.db
 desktop.ini
+*.docx
