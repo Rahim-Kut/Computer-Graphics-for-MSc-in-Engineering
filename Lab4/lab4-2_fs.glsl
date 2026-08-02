@@ -352,9 +352,18 @@ vec3 raytrace()
         // YOUR TASK: Create new ray, compute its position, direction,
         // and weight, and call push(ray).
 
-	      // Ray ray2 = ray;
-	      // push( ray2 );
+        // A ray reflected around the surface normal
+        Ray reflected_ray;
+        reflected_ray.dir = normalize(reflect(ray.dir, nl));
 
+        // Move the ray slightly away from the surface
+        reflected_ray.origin = isec.point + 0.001 * reflected_ray.dir;
+
+        // Split the incoming ray's weight
+        reflected_ray.weight = ray.weight * reflectivity;
+        ray.weight -= reflected_ray.weight;
+
+        push(reflected_ray);
       }
 
       
