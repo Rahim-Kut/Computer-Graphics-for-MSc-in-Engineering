@@ -194,26 +194,119 @@ vec3 simple_sky(vec3 direction)
 // Ray-sphere intersection
 float intersect(Ray ray, Sphere s) 
 {
-  //COPY YOUR CODE FROM 4.1 HERE
-  return 0;
+  // Return closest distance t for a ray/sphere intersection.
+
+  // Vector from the sphere to the ray origin
+  vec3 oc = ray.origin - s.center;
+
+  // Quadratic equation: a × t² + b × t + c = 0
+
+  // Coefficients of the quadratic equation
+  float a = dot(ray.dir, ray.dir);
+  float b = 2.0 * dot(oc, ray.dir);
+  float c = dot(oc, oc) - s.radius * s.radius;
+
+  float discriminant = b * b - 4.0 * a * c; 
+
+  // Negative discriminant means that the ray misses the sphere
+  if (discriminant < 0.0)
+	return -1.0;
+  
+  float sqrt_discriminant = sqrt(discriminant);
+  float t_near = (-b - sqrt_discriminant) / (2.0 * a);
+  float t_far = (-b + sqrt_discriminant) / (2.0 * a);
+
+  // Return the closest intersection in front of the camera
+  if (t_near > 0.0)
+	return t_near;
+  if (t_far > 0.0)
+	return t_far;
+
+  return -1.0;
 }
 
 // Ray-plane intersection
 float intersect(Ray ray, Plane p) 
 {
-  //COPY YOUR CODE FROM 4.1 HERE
-  return 0;
+  // Return closest distance t for a ray/plane intersection.
+
+  float denominator = dot(p.normal, ray.dir); // measuers how directly rhe ray approaches the plane
+
+  // A value close to 0 means the ray is paralell to the plane
+  if (abs(denominator) < 0.000001)
+	return -1.0;
+  
+  float t = -(dot(p.normal, ray.origin) + p.offset) / denominator;
+  
+  //ignore intersections behind the camera
+  if (t <= 0.0)
+	return -1.0;
+
+  return t;
+
 }
 
 // Check for intersection of a ray and all objects in the scene
 Intersection intersect( Ray ray)
 {
   Intersection I;
+  float t = 1e32; // closest hit so far along this ray
+  int id = -1;
+    
+  //Check for intersection with spheres
+  for (int i = 0; i < NUM_SPHERES; ++i) {
+    float d = intersect(ray, scene.spheres[i]);
+    if (d>0 && d<=t) // if sphere `i` is closer than `t`, update `t` and `id`
+    {
+      t = d; 
+      id = i;
 
-  //COPY YOUR CODE FROM 4.1 HERE
-  // Manage intersections
+      // Populate I with all the relevant data.  `id` is the closest
+      // sphere that was hit, and `t` is the distance to it.
 
+	  // Store the information for the closest sphere hit
+	  I.point = ray.origin + t * ray.dir;
+	  I.normal = normalize(I.point - scene.spheres[id].center); // normal = hit point - sphere centre
+	  I.material = scene.spheres[id].material;
 
+    }
+  }
+
+  //Check for intersection with planes
+  {
+    float d = intersect(ray,scene.ground_plane[0]);
+    if (d>0 && d<=t) // if the plane is closer than `t`, update `t`
+    {
+      t=d;
+
+      // Store information for the ground-plane hit
+	  I.point = ray.origin + t * ray.dir;
+	  I.normal = normalize(scene.ground_plane[0].normal);
+	  I.material = scene.ground_plane[0].material;
+      
+      // Adding a procedural checkerboard texture:
+      I.material.color_diffuse = (mod(floor(I.point.x) + floor(I.point.z),2.0) == 0.0) ?
+        scene.ground_plane[0].material.color_diffuse :
+        vec3(1.0) - scene.ground_plane[0].material.color_diffuse;
+    }
+  }
+
+  //If no sphere or plane hit, we hit the sky instead
+  if (t>1e20){
+    I.point = ray.dir*t;
+    I.normal = -ray.dir;
+    vec3 sky = simple_sky(ray.dir); // pick color from sky function
+
+    // Sky is all emission, no diffuse or glossy shading:
+    I.material.color_diffuse = 0 * sky; 
+    I.material.color_glossy = 0.0 * vec3( 1 );
+    I.material.roughness = 1;
+    I.material.color_emission = 0.3 * sky;
+    I.material.reflection = 0.0;
+    I.material.transmission = 0;
+    I.material.ior = 1;
+
+  }
   return I;
 }
 
@@ -272,13 +365,53 @@ vec3 raytrace()
         // point is visible from the (single) light source.
         // If it is in shadow, set a black (or dark "ambient") colour.
 
+        // Shadow ray from surface toward the light
+        Ray shadow_ray;
+        shadow_ray.origin = isec.point + 0.001 * light_direction; // 0.001 to move it slightly above surface and avoid shadow acne
+        shadow_ray.dir = light_direction;
+        shadow_ray.weight = 0.0;
+
+        float light_distance = length(i_light_position - shadow_ray.origin);
+        bool in_shadow = false;
+
+        // Check whether a sphere blocks the light
+        for (int i = 0; i < NUM_SPHERES; ++i)
+        {
+            float sphere_distance = intersect(shadow_ray, scene.spheres[i]);
+
+            if (sphere_distance > 0.0 && sphere_distance < light_distance)
+            {
+                in_shadow = true;
+                break;
+            }
+        }
+
+        // If no spehre blocks the light check ground plane
+        if (!in_shadow)
+        {
+            float plane_distance = intersect(shadow_ray, scene.ground_plane[0]);
+
+            if (plane_distance > 0.0 && plane_distance < light_distance)
+            {
+                in_shadow = true;
+            }
+        }
+
+        // Use weak ambient illumination in shadows and full illumination otherwise
+        vec3 irradiance = in_shadow ? vec3(0.05) : vec3(1.0);
+
 
         // YOUR TASK: If the point is not in shadow, compute the
         // colour here (using your BRDF, as before).
-        
-	      this_color = isec.material.color_diffuse + isec.material.color_emission;            
 
-	      color += this_color;
+        // Lambertian shading from Task 4.1.
+        float cosine = max(0.0, dot(nl, light_direction));
+        vec3 lambertian_brdf =
+        isec.material.color_diffuse / 3.14159265;
+
+        this_color = ray.weight * (irradiance * lambertian_brdf * cosine + isec.material.color_emission);
+
+        color += this_color;
 
       }
 
@@ -302,10 +435,23 @@ void main() {
 
     init();
 
-    Ray ray;
+    // Centre the pixel coordinates around the middle of the window.
+    vec2 uv = gl_FragCoord.xy - 0.5 * i_window_size.xy;
 
-    //COPY YOUR CODE FROM 4.1 HERE
-    // Create a ray
+    // Focal distance and the right-mouse zoom.
+    float f_dist = i_focal_dist + i_focal_dist * i_mouse_state.w;
+
+    // Camera basis directions.
+    vec3 cx = i_right;
+    vec3 cy = i_up;
+    vec3 cz = i_dir;
+
+    // Initial camera ray.
+    Ray ray;
+    ray.origin = i_position;
+    ray.dir = normalize(f_dist * cz + uv.x * cx + uv.y * cy);
+    ray.weight = 1.0;
+
 
     // Push the ray noto the ray stack
     push( ray );
