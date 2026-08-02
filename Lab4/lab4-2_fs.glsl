@@ -326,7 +326,8 @@ vec3 raytrace()
       vec3 light_direction = normalize(i_light_position - isec.point);
 
       vec3 this_color = vec3(0);
-            
+
+      float incoming_weight = ray.weight;      
       float reflectivity = isec.material.reflection;
 
       if (isec.material.transmission > 0)
@@ -337,14 +338,31 @@ vec3 raytrace()
         // the new ray will be handled, so no recursive call to
         // raytrace() is required.
 
-        // Optionally, compute what fraction should be reflected, and
-        // send out a second ray in the reflection
-        // direction. Otherwise, use the block below for specular
-        // reflection.
+        // Check wether the ray in inside or outside the object
+        bool inside = dot(isec.normal, ray.dir) > 0.0;
 
-	      // Ray ray2 = ray;
-	      // push( ray2 );
+        // Ratio between the two indices of refraction
+        float ior_ratio; 
+        if (inside)
+        {
+            // The ray is leaving the object and entering the air
+            ior_ratio = isec.material.ior;
+        }
+        else
+        {
+            // The ray is entering the object from the air
+            ior_ratio = 1.0 / isec.material.ior;
+        }
 
+        // The transmitted ray
+        Ray transmitted_ray;
+        transmitted_ray.dir = normalize(refract(ray.dir, nl, ior_ratio));
+        transmitted_ray.origin = isec.point + 0.001 * transmitted_ray.dir;
+        transmitted_ray.weight = incoming_weight * isec.material.transmission; // part of the incoming weight
+        
+        ray.weight -= transmitted_ray.weight;
+
+        push(transmitted_ray);
       }
       
       if (isec.material.reflection > 0)
@@ -360,7 +378,7 @@ vec3 raytrace()
         reflected_ray.origin = isec.point + 0.001 * reflected_ray.dir;
 
         // Split the incoming ray's weight
-        reflected_ray.weight = ray.weight * reflectivity;
+        reflected_ray.weight = incoming_weight * reflectivity;
         ray.weight -= reflected_ray.weight;
 
         push(reflected_ray);
