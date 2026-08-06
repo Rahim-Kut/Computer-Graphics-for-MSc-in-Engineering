@@ -33,3 +33,4 @@ visual_studio/**/x64/
 Thumbs.db
 desktop.ini
 *.docx
+*.pdf

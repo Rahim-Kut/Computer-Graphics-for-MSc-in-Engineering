@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.8.12023.21 stable
+VisualStudioVersion = 18.8.12023.21
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lab4", "Lab4", "{0BDFAA65-69F8-42CD-8D65-A1D017378B9C}"
 EndProject
@@ -32,6 +32,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lab4-4", "lab4-4.vcxproj", 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lodepng", "lodepng\lodepng.vcxproj", "{D3FA4B4E-8EC1-4194-B97D-C1CB52C93264}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lab4-5", "lab4-5.vcxproj", "{6B333B46-8078-4D06-8701-F48405A28E6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,14 @@ Global
 		{D3FA4B4E-8EC1-4194-B97D-C1CB52C93264}.Release|x64.Build.0 = Release|x64
 		{D3FA4B4E-8EC1-4194-B97D-C1CB52C93264}.Release|x86.ActiveCfg = Release|Win32
 		{D3FA4B4E-8EC1-4194-B97D-C1CB52C93264}.Release|x86.Build.0 = Release|Win32
+		{6B333B46-8078-4D06-8701-F48405A28E6F}.Debug|x64.ActiveCfg = Debug|x64
+		{6B333B46-8078-4D06-8701-F48405A28E6F}.Debug|x64.Build.0 = Debug|x64
+		{6B333B46-8078-4D06-8701-F48405A28E6F}.Debug|x86.ActiveCfg = Debug|Win32
+		{6B333B46-8078-4D06-8701-F48405A28E6F}.Debug|x86.Build.0 = Debug|Win32
+		{6B333B46-8078-4D06-8701-F48405A28E6F}.Release|x64.ActiveCfg = Release|x64
+		{6B333B46-8078-4D06-8701-F48405A28E6F}.Release|x64.Build.0 = Release|x64
+		{6B333B46-8078-4D06-8701-F48405A28E6F}.Release|x86.ActiveCfg = Release|Win32
+		{6B333B46-8078-4D06-8701-F48405A28E6F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
