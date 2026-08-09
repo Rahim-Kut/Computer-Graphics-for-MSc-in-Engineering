@@ -386,7 +386,19 @@ vec3 pathtrace(Ray ray)
     // Follow one path for at most MAX_DEPTH bounces
     for (int depth = 0; depth < MAX_DEPTH; ++depth)
     {
-        
+        // First object hit by the current path segment
+        Intersection isec = intersect(ray);
+
+        // If surface emits light, add it to the path color
+        if (length(isec.material.color_emission) > 0.0)
+        {
+            color += isec.material.color_emission * coefficient;
+
+            break;
+        }
+    
+    // The surface absorbs some wavelengths from the path
+    coefficient *= isec.material.color_diffuse;
 
     }
 
