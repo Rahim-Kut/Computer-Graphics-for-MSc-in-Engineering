@@ -377,6 +377,10 @@ Intersection intersect( Ray ray)
 
 vec3 pathtrace(Ray ray)
 {
+    // color that remains after travelling along the path
+    vec3 coefficient = vec3(1.0);
+
+    // Light collected along the path
     vec3 color = vec3(0.0);
 
     // Follow one path for at most MAX_DEPTH bounces
