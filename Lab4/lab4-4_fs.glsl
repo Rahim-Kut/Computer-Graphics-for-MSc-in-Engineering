@@ -22,6 +22,16 @@ uniform float i_focal_dist;
 #define MAX_DEPTH 10 
 #define MAX_SAMPLES 20
 
+const float PI = 3.14159265;
+
+float seed = 0.0;
+
+float rand(void)
+{
+    seed += 0.14;
+    return fract(sin(seed) * 43758.5453123);
+}
+
 
 
 struct Ray { vec3 origin, dir; float weight;};
@@ -375,6 +385,21 @@ Intersection intersect( Ray ray)
   return I;
 }
 
+// Generate a cosign-weighted random direction around mean
+vec3 random_direction(vec3 mean, float spread)
+{
+    float r2 = spread * rand();
+    float phi = 2.0 * PI * rand();
+    float sina = sqrt(r2);
+    float cosa = sqrt(1.0 - r2);
+
+    vec3 w = normalize(mean);
+    vec3 u = normalize(cross(w.yzx, w));
+    vec3 v = cross(w,u);
+
+    return (u * cos(phi) + v * sin(phi)) * sina + w * cosa;
+}
+
 vec3 pathtrace(Ray ray)
 {
     // color that remains after travelling along the path
@@ -400,6 +425,58 @@ vec3 pathtrace(Ray ray)
     // The surface absorbs some wavelengths from the path
     coefficient *= isec.material.color_diffuse;
 
+    // Make the normal point against the incoming ray
+    vec3 nl = isec.normal * sign(-dot(isec.normal, ray.dir));
+
+    float reflection_amount = isec.material.reflection;
+    float transmission_amount = isec.material.transmission;
+    float random_number = rand();
+
+    // Choose reflection, transmission or diffuse scattering
+    if (random_number < reflection_amount)
+    {
+      // Mirror reflection
+      ray.dir = normalize(reflect(ray.dir, nl));
+    }
+    else if (random_number < reflection_amount + transmission_amount)
+    {
+      // Determine whether the ray is entering or leaving
+      bool inside = dot(isec.normal, ray.dir) > 0.0;
+
+      float ior_ratio;
+
+      if (inside)
+      {
+        // Leaving the material and entering air
+        ior_ratio = isec.material.ior;
+      }
+      else
+      {
+        // Entering the material from air
+        ior_ratio = 1.0 / isec.material.ior;
+      }
+
+      vec3 refracted_direction = refract(ray.dir, nl, ior_ratio);
+
+      // refract returns zero during total internal reflection
+      if (length(refracted_direction) > 0.0)
+      {
+        ray.dir = normalize(refracted_direction);
+      }
+      else
+      {
+        ray.dir = normalize(reflect(ray.dir, nl));
+      }
+    }
+    else
+    {
+      // Cosine-weighted diffuse scattering
+      ray.dir = normalize(random_direction(nl, 1.0));
+    }
+
+    // Begin the next segment slightly beyond the surface
+    ray.origin = isec.point + 0.001 * ray.dir;
+
     }
 
     return color;
@@ -418,6 +495,9 @@ void main() {
   {
 
     init();
+
+    // Give every pixel and frame a different random sequence
+    seed = i_global_time + i_window_size.y * gl_FragCoord.x / i_window_size.x + gl_FragCoord.y / i_window_size.y;
 
     // Centre the pixel coordinates around the middle of the window.
     vec2 uv = gl_FragCoord.xy - 0.5 * i_window_size.xy;
