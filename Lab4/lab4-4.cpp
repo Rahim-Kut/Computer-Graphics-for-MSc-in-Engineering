@@ -28,7 +28,7 @@ float pitch = 0;
 float focal_dist = 512.0f;
 float move_speed = 0.08;
 float mouse_speed = 0.001f;
-float brightness = 15;
+float brightness = 1.0f;
 
 unsigned int frame_count = 0;
 int w_width = 512;
@@ -113,7 +113,9 @@ static void scroll_callback(GLFWwindow* window, double scroll_v, double scroll_h
 {
     mouse_state.x += scroll_v;
     mouse_state.y += scroll_h;
-    brightness += scroll_h;
+    brightness += 0.1f * float(scroll_h);
+    if (brightness < 0.0f)
+        brightness = 0.0f;
     frame_count = 0;
 }
 

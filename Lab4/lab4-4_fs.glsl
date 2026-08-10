@@ -86,8 +86,7 @@ Scene scene;
 
 void init( )
 {
-	// Hard-coded single point light source
-	scene.sun_brightness = 1;
+	scene.sun_brightness = i_light_color.r;
 	scene.sun_position = vec3(6e3,  1e4, 1e4);
 	
 	// Initialise 5 spheres and a ground plane
@@ -203,7 +202,7 @@ vec3 simple_sky(vec3 direction)
 	float emission_sun = 10*scene.sun_brightness*scene.sun_brightness;
   vec3 sky_color = vec3(0.35, 0.65, 0.85);
   vec3 haze_color = vec3(0.8, 0.85, 0.9);
-  vec3 light_color = clamp(i_light_color,0,1);
+  vec3 light_color = vec3(1.0);
 
   float sun_spread = 2500.0;
   float haze_spread = 1.3;
@@ -421,9 +420,6 @@ vec3 pathtrace(Ray ray)
 
             break;
         }
-    
-    // The surface absorbs some wavelengths from the path
-    coefficient *= isec.material.color_diffuse;
 
     // Make the normal point against the incoming ray
     vec3 nl = isec.normal * sign(-dot(isec.normal, ray.dir));
@@ -437,6 +433,9 @@ vec3 pathtrace(Ray ray)
     {
       // Mirror reflection
       ray.dir = normalize(reflect(ray.dir, nl));
+
+      // A mirror reflection uses the glossy material color
+      coefficient *= isec.material.color_glossy;
     }
     else if (random_number < reflection_amount + transmission_amount)
     {
@@ -467,11 +466,32 @@ vec3 pathtrace(Ray ray)
       {
         ray.dir = normalize(reflect(ray.dir, nl));
       }
+
+      // Tint transmitted light with the material color
+      coefficient *= isec.material.color_diffuse;
+
     }
     else
     {
       // Cosine-weighted diffuse scattering
       ray.dir = normalize(random_direction(nl, 1.0));
+
+      // Lambertian BRDF from Task 4.1
+      float cosine = max(0.0, dot(nl, ray.dir));
+      vec3 lambertian_brdf = isec.material.color_diffuse / PI;
+
+      // Probability of selecting this cosine-weighted direction
+      float sample_probability = cosine / PI;
+
+      if (sample_probability > 0.0)
+      {
+        coefficient *= lambertian_brdf * cosine / sample_probability;
+      }
+      else
+      {
+        break;
+      }
+
     }
 
     // Begin the next segment slightly beyond the surface
