@@ -95,6 +95,9 @@
     <OutDir>..\Lab4\build\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup>
+	<LocalDebuggerWorkingDirectory>$(ProjectDir)..\Lab4\build\</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>

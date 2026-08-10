@@ -34,6 +34,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lodepng", "lodepng\lodepng.vcxproj", "{D3FA4B4E-8EC1-4194-B97D-C1CB52C93264}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lab4-5", "lab4-5.vcxproj", "{6B333B46-8078-4D06-8701-F48405A28E6F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{76F7623E-1850-4214-A8F2-764660EF2A4E} = {76F7623E-1850-4214-A8F2-764660EF2A4E}
+		{D3FA4B4E-8EC1-4194-B97D-C1CB52C93264} = {D3FA4B4E-8EC1-4194-B97D-C1CB52C93264}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

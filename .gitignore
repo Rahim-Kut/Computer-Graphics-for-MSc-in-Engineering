@@ -22,7 +22,7 @@ build.ninja
 *.exe
 *.app
 
-# --- IDE/OS fluff ---
+# --- IDE/OS stuff ---
 .vscode/
 .vs/
 .idea/
@@ -34,3 +34,4 @@ Thumbs.db
 desktop.ini
 *.docx
 *.pdf
+!Lab4/Lab4-questions-answers.pdf
