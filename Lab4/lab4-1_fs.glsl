@@ -165,7 +165,7 @@ float intersect(Ray ray, Sphere s)
   // Vector from the sphere to the ray origin
   vec3 oc = ray.origin - s.center;
 
-  // Quadratic equation: a × t² + b × t + c = 0
+  // Quadratic equation: at² + bt + c = 0
 
   // Coefficients of the quadratic equation
   float a = dot(ray.dir, ray.dir);
@@ -195,9 +195,9 @@ float intersect(Ray ray, Plane p)
 {
   // Return closest distance t for a ray/plane intersection.
 
-  float denominator = dot(p.normal, ray.dir); // measuers how directly rhe ray approaches the plane
+  float denominator = dot(p.normal, ray.dir); // measuers how directly the ray approaches the plane
 
-  // A value close to 0 means the ray is paralell to the plane
+  // A value close to 0 means the ray is parallell to the plane
   if (abs(denominator) < 0.000001)
 	return -1.0;
   
