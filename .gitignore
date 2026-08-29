@@ -1,37 +1,46 @@
-# --- CMake build junk ---
-**/build/
-[Cc]MakeCache.txt
-[Cc]MakeFiles/
-cmake_install.cmake
-Makefile
-CMakeUserPresets.json
-build.ninja
-.ninja_deps
-.ninja_log
+# Build folders
+Lab*/build/
+common/build/
+visual_studio/x64/
+visual_studio/Win32/
+visual_studio/**/x64/
+visual_studio/**/Win32/
+csv_*_brdf/x64/
+csv_*_brdf/Win32/
 
-# --- Compiled stuff ---
-*.o
+# Visual Studio cache/user files
+.vs/
+**/.vs/
+*.vcxproj.user
+*.suo
+*.VC.db
+*.VC.opendb
+
+# Compiler/linker outputs
+*.exe
 *.obj
-*.a
-*.lib
-*.dll
-*.so
-*.dylib
 *.pdb
 *.ilk
-*.exe
-*.app
+*.idb
+*.tlog
+*.lastbuildstate
+*.log
 
-# --- IDE/OS stuff ---
+# Generated CSV output
+*.csv
+
+# OS/IDE junk
 .vscode/
-.vs/
 .idea/
-*.vcxproj.user
-visual_studio/x64/
-visual_studio/**/x64/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# PDFs/docs, except submitted Lab4 PDF
 *.docx
 *.pdf
 !Lab4/Lab4-questions-answers.pdf
+
+# Keep bundled Windows dependencies if needed
+!common/windows_users/**/*.lib
+!common/windows_users/**/*.dll
